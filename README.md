@@ -7,17 +7,17 @@
 ##生成带logo的二维码
 ```javascript
 var fs = require('fs'),
-    qrCodeLogo = require('../index');
+    qrCodeLogo = require('../index'),
 
-qrCodeLogo('https://www.baidu.com/', '/Users/test/myworkspace/_qr_logo.png', {
-    size: 10,  // 二维码大小
-    logo:  fs.readFileSync('/Users/test/myworkspace/logo.png', {
+    url = 'https://www.baidu.com/',
+    qrcodeImgFilePath = '/Users/test/myworkspace/qr_logo.png',
+    logoBuffer = fs.readFileSync('/Users/test/myworkspace/logo.png', {
         encoding: null
-    })
-}, function (err, img) {
-    // 回调函数，在生成图片文件后执行
-    // img为生成图片的属性字典（包启大小，色值等信息）
-    console.log(err, img);
+    });
+
+qrCodeLogo(url, qrcodeImgFilePath, {
+    size: 10,  // 二维码大小
+    logo: logoBuffer // logo数据
 });
 ```
 
@@ -25,10 +25,13 @@ qrCodeLogo('https://www.baidu.com/', '/Users/test/myworkspace/_qr_logo.png', {
 ##仅生成二维码图片
 ```javascript
 var fs = require('fs'),
-    qrCodeLogo = require('../index');
+    qrCodeLogo = require('../index'),
 
-qrCodeLogo('https://www.baidu.com/', '/Users/fisher/myworkspace/test_qr.png', function (err, img) {
-    console.log(err, img);
+    url = 'https://www.baidu.com/',
+    qrcodeImgFilePath = '/Users/test/myworkspace/qr.png';
+
+qrCodeLogo(url, qrcodeImgFilePath, function (err, img) {
+    console.log(err, img); // img为生成二维码图片信息（包含高度、宽度等信息）
 });
 ```
 
@@ -38,34 +41,34 @@ qrCodeLogo('https://www.baidu.com/', '/Users/fisher/myworkspace/test_qr.png', fu
 qrcode(text, outpath, qrOpts, cb) 或 qrcode(text, outpath, cb)
 
 ##参数
-###text
-(String)生成二维码的文本、url
+###text（必填）
+(String)生成二维码的文本、url。
 
-###outpath
-(String）生成的二维码的文件路径
+###outpath（必填）
+(String）生成的二维码的文件路径。
 
-###cb
+###cb（可选）
 生成二维码图片文件回调方法: function (err, img) {
     // err 错误认息
     // img  生成的二维码图片信息（高度、宽度、色值等）
 }
 
-###qrOpts.size
+###qrOpts.size（可选）
 (Number)二维码图片大小，默认值为10（pixel)
 
-###qrOpts.parse_url
+###qrOpts.parse_url（可选）
 (Boolean)是否优化处理text为url的情况， 默认为true
 
-###qrOpts.logo
+###qrOpts.logo（可选）
 (Buffer) logo图片的buffer数据
 
-###qrOpts.logoBorderWidth
+###qrOpts.logoBorderWidth（可选）
 (Number)边框大小，默认值为4(pixel)。
         
-###qrOpts.logoBorderRadius
+###qrOpts.logoBorderRadius（可选）
 (Number)logo圆角大小, 默认值为20(pixel)。
 
-###qrOpts.logoBorderColor
+###qrOpts.logoBorderColor（可选）
 (Number)边框颜色，使用十六进制颜色值.
 
 
