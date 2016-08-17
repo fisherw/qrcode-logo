@@ -45,7 +45,7 @@ qrcode(text, outpath, qrOpts, cb) 或 qrcode(text, outpath, cb)
 (String)生成二维码的文本、url。
 
 ###outpath（必填）
-(String）生成的二维码的文件路径。
+(String）生成的二维码图片的文件路径。
 
 ###cb（可选）
 生成二维码图片文件回调方法: function (err, img) {
