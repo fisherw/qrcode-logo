@@ -1,0 +1,27 @@
+{
+  "name": "qrcode-logo",
+  "version": "1.0.0",
+  "description": "qrcode fill with logo",
+  "homepage": "git@github.com:fisherw/qrcode-logo.git",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "qr-image": "latest",
+    "node-gd": "latest",
+    "underscore": "latest"
+  },
+  "keywords": [
+    "qrcode",
+    "logo",
+    "image",
+    "text",
+    "google",
+    "node-gd",
+    "qr-image",
+    "api"
+  ],
+  "author": "fisher <wangjiang.fly.1989@163.com>",
+  "license": "ISC"
+}
