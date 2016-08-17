@@ -15,6 +15,11 @@ module.exports = function (text, outpath, qrOpts, cb) {
         throw Error('text is required!');
     }
 
+    // 处理text长度过短导致识别二维码失效的问题
+    _.times(80 - text.length, function() {
+        text += ' ';
+    });
+
     if (!outpath) {
         throw Error('outpath is required!');
     }
@@ -29,7 +34,7 @@ module.exports = function (text, outpath, qrOpts, cb) {
         logo: null,
         logoBorderWidth: 4,    // 加边框
         logoBorderRadius: 20, // 给logo添加圆角
-        logoBorderColor: gd.trueColorAlpha(255, 255, 255, 10)
+        logoBorderColor: 0xffffff
 
     }, options);
 
@@ -56,7 +61,7 @@ module.exports = function (text, outpath, qrOpts, cb) {
 
         gdLogoImage = gd.createFromPngPtr(options.logo);
 
-        gdLogoImage = borderImage(gdLogoImage, options.logoBorderRadius, options.logoBorderWidth, options.logoBorderColor);
+        // gdLogoImage = borderImage(gdLogoImage, options.logoBorderRadius, options.logoBorderWidth, options.logoBorderColor);
 
         gdQrImageWidth = gdQrImage.width;
         gdQrImageHeight = gdQrImage.height;
