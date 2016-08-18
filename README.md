@@ -2,11 +2,8 @@
 基于node-gd图形处理库，用于生成带logo的二维码图片。
 
 #效果
-<div style="height: 165px;">
-<img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/test_qr.png" width = "150" height = "165" alt="基础二维码" align=left />
-<img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/testqr_logo.png" width = "150" height = "165" alt="带logo二维码" align=left />
-<img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/testqr_logo1.png" width = "150" height = "165" alt="带logo二维码1" align=left />
-</div>
+<div style="height: 165px;"><img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/test_qr.png" width = "150" height = "165" alt="基础二维码" align=left /><img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/testqr_logo.png" width = "150" height = "165" alt="带logo二维码" align=left /><img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/testqr_logo1.png" width = "150" height = "165" alt="带logo二维码1" align=left /></div>
+
 
 #示例
 ##生成带logo的二维码
