@@ -18,7 +18,7 @@ var fs = require('fs'),
     });
 
 qrCodeLogo(url, qrcodeImgFilePath, {
-    size: 10,  // 二维码大小
+    size: 10,  // 二维码单位块大小
     logo: logoBuffer // logo数据
 });
 ```
@@ -49,7 +49,7 @@ var fs = require('fs'),
     });
 
 qrCodeLogo(url, qrcodeImgFilePath, {
-    size: 10,  // 二维码大小
+    size: 10,  // 二维码单位块大小
     margin: 2,
     logo: logoBuffer, // logo数据
     logoBorder: {   // border边框配置
