@@ -1,6 +1,6 @@
 {
   "name": "qrcode-logo",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "qrcode fill with logo",
   "homepage": "https://git@github.com:fisherw/qrcode-logo.git",
   "main": "index.js",
