@@ -82,7 +82,10 @@ qrcode(text, outpath, qrOpts, cb) 或 qrcode(text, outpath, cb)
 }
 
 ###qrOpts.size（可选）
-(Number)二维码图片大小，默认值为10（pixel)
+(Number)二维码图片中二维码每块大小，默认值为10（pixel)。（二维码版本区间为version1 ~ version40, 每个版本对应块数不同。该插件生成的二维码基本由41块组成，即整个二维码图片宽度为：41 * qrOpts.size + qrOpts.margin * 2 * qrOpts.size）
+
+###qrOpts.margin（可选）
+(Number) 二维码周边的留白的块数，默认4（注意，此处不是真实的像素大小）。
 
 ###qrOpts.parse_url（可选）
 (Boolean)是否优化处理text为url的情况， 默认为true
