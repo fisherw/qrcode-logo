@@ -1,15 +1,26 @@
 var _ = require('underscore'),
     gd = require('node-gd'),
-    qrImage = require('qr-image');
+    qrImage = require('qr-image'),
+    path = require('path');
 
-module.exports = function (text, outpath, qrOpts, cb) {
+/**
+ * [exports description]
+ * @Author   fisher<wangjiang.fly.1989@163.com>
+ * @DateTime 2016-08-18T11:48:06+0800
+ * @param    {[type]}                           text    [description]
+ * @param    {[type]}                           outpath [description]
+ * @param    {[type]}                           options [description]
+ * @param    {Function}                         cb      [description]
+ * @return   {[type]}                                   [description]
+ */
+module.exports = function (text, outpath, options, cb) {
 
     if ('function' === typeof qrOpts) {
         cb = qrOpts;
         qrOpts = {};
     }
 
-    options = qrOpts || {};
+    options = options || {};
 
     if (!text) {
         throw Error('text is required!');
@@ -28,20 +39,34 @@ module.exports = function (text, outpath, qrOpts, cb) {
         size: 10,
         // ec_level: 'H', // One of L, M, Q, H
         // type: 'png',    //png (default), svg, pdf and eps.
-        // margin: null, // white space around QR image in modules. Default 4 for png and 1 for others.
+        margin: 4, // white space around QR image in modules. Default 4 for png and 1 for others.
         // customize: null, // (only png) — function to customize qr bitmap before encoding to PNG.
         parse_url: true,  // (experimental, default false) — try to optimize QR-code for URLs.
-        logo: null,
-        logoBorderWidth: 4,    // 加边框
-        logoBorderRadius: 20, // 给logo添加圆角
-        logoBorderColor: 0xffffff
-
+        logo: null
     }, options);
 
     // 写死生成的图片类型
     options.type = 'png';
     // 不设置容错级别为'H'，二维码无法识别
     options.ec_level = 'H';
+
+    // logo边框配置
+    options.logoBorder = _.extend({
+        width: 0,           // 边框宽度
+        radius: 10,         // 给logo添加圆角
+        color: 0xffffff     // 边框颜色
+    }, options.logoBorder || {});
+
+    // 底部文本框配置
+    options.bottomText = _.extend({
+        height: 45,         // 文本框高度
+        align: 'center',    // 文本对齐方式
+        size: 25,           // 文本字体大小
+        angle: 0,           // 旋转角度
+        color: 0x000000,    // 文本颜色
+        bgColor: 0xffffff,  // 文本框背景色 ,
+        fontFilePath: null  // 文本对应字体ttf文件路径。默认为楷体（gb-2312）
+    }, options.bottomText || {});
 
     var qrImageBuffer,
         gdLogoImage,
@@ -53,36 +78,27 @@ module.exports = function (text, outpath, qrOpts, cb) {
     // 由图片buffer创建二维码画布
     gdQrImage = gd.createFromPngPtr(qrImageBuffer);
 
+    // 添加logo
     if(options.logo){
-        var gdQrImageWidth,
-            gdQrImageHeight,
-            gdLogoImageWidth,
-            gdLogoImageHeight;
-
         gdLogoImage = gd.createFromPngPtr(options.logo);
+        if (!gdLogoImage) {
+            gdLogoImage = gd.createFromJpegPtr(options.logo);
+        }
 
-        // gdLogoImage = borderImage(gdLogoImage, options.logoBorderRadius, options.logoBorderWidth, options.logoBorderColor);
+        // 添加logo的border
+        if (options.logoBorder && options.logoBorder.width != undefined) {
+            gdLogoImage = borderImage(gdLogoImage, options.logoBorder.radius, options.logoBorder.width, options.logoBorder.color);
+        }
 
-        gdQrImageWidth = gdQrImage.width;
-        gdQrImageHeight = gdQrImage.height;
-        
-        gdLogoImageWidth = gdLogoImage.width;
-        gdLogoImageHeight = gdLogoImage.height;
-        
-        logoQrWidth = parseInt(gdQrImageWidth / 3);
-        scale = gdLogoImageWidth / logoQrWidth;
-        logoQrHeight = parseInt(gdLogoImageHeight / scale);
-        
-        // 取目标图像的1/3大小作为logo填充大小在图像的1/3处填充，保证logo处于图像中间
-        gdLogoImage.copyResampled(gdQrImage,
-            parseInt(gdQrImageWidth / 3), parseInt(gdQrImageHeight / 3),
-            0, 0,
-            logoQrWidth, logoQrHeight,
-            gdLogoImageWidth, gdLogoImageHeight);
-            
-        
+        addLogoImage(gdQrImage, gdLogoImage); 
     }
 
+    // 添中底部文本
+    if (options.bottomText && options.bottomText.text) {
+        gdQrImage = addBottomText(gdQrImage, options.bottomText, options.size, options.margin);
+    }
+
+    // 保存图片
     gdQrImage.savePng(outpath, function(err, img) {
         if (err) {
             console.error(err);
@@ -101,6 +117,36 @@ module.exports = function (text, outpath, qrOpts, cb) {
         }
         gdQrImage.destroy();
     });
+};
+
+/**
+ * 给图片中间添加Logo
+ * @Author   fisher<wangjiang.fly.1989@163.com>
+ * @DateTime 2016-08-18T11:27:52+0800
+ * @param    {[type]}                           img     [description]
+ * @param    {[type]}                           logoImg [description]
+ */
+var addLogoImage = function(img, logoImg) {
+    var imgWidth,
+        imgHeight,
+        logoImgWidth,
+        logoImgHeight;
+
+    imgWidth = img.width;
+    imgHeight = img.height;
+    logoImgWidth = logoImg.width;
+    logoImgHeight = logoImg.height;
+    
+    logoQrWidth = parseInt(imgWidth / 3);
+    scale = logoImgWidth / logoQrWidth;
+    logoQrHeight = parseInt(logoImgHeight / scale);
+    
+    // 取目标图像的1/3大小作为logo填充大小在图像的1/3处填充，保证logo处于图像中间
+    logoImg.copyResampled(img,
+        parseInt(imgWidth / 3), parseInt(imgHeight / 3),
+        0, 0,
+        logoQrWidth, logoQrHeight,
+        logoImgWidth, logoImgHeight);
 };
 
 
@@ -124,6 +170,12 @@ var borderImage = function(img, borderRadius, borderWidth, borderColor) {
     // 填充背景色作为边框色
     // borderImg.fill(0, 0, 0xffffff); // 白色
     borderImg.fill(0, 0, borderColor);
+
+    // 画白色背景距形以用于填充logo
+    var colorRect = borderImg.colorAllocate(255, 255, 255);
+    borderImg.filledRectangle(borderWidth, borderWidth, borderWidth + imgW, borderWidth + imgH, colorRect);
+    // 设置距形透明
+    // borderImg.colorTransparent(colorRect);
 
     // 将图片添加到画布(添加到(borderWidth, borderHeight)位置)
     img.copyResampled(borderImg,
@@ -210,4 +262,43 @@ var getArcImg = function (size, bgColor, direction) {
     arcImg.colorTransparent(colorArc);
 
     return arcImg;
+};
+
+/**
+ * 给图片添加底部文本
+ * @Author   fisher<wangjiang.fly.1989@163.com>
+ * @DateTime 2016-08-18T11:27:23+0800
+ * @param    {[type]}                           img            [description]
+ * @param    {[type]}                           options        [description]
+ * @param    {[type]}                           baseModuleSize [description]
+ * @param    {[type]}                           marginModules  [description]
+ */
+var addBottomText = function(img, options, baseModuleSize, marginModules) {
+    var textHeight = options.height || (options.size + 20),
+        textImg = gd.createTrueColorSync(img.width, img.height + textHeight),
+        fontFilePath = options.fontFilePath || path.resolve(__dirname, './fonts/kai_gb2312.ttf'),
+        textX = 0;
+
+    // 左对齐
+    if (options.align === 'left') {
+        textX = baseModuleSize * marginModules;
+
+    // 右对齐
+    } else if (options.align === 'right') {
+        textX = img.width - options.text.length * options.size - baseModuleSize * marginModules;
+    // 居中
+    } else{
+        textX = parseInt((img.width - options.text.length * options.size) / 2);
+    }
+
+    textImg.fill(0, 0, options.bgColor);
+
+    img.copyResampled(textImg,
+            0, 0,
+            0, 0,
+            img.width, img.height,
+            img.width, img.height);
+    textImg.stringFT(options.color, fontFilePath, options.size, options.angle, textX, textImg.height - parseInt((textHeight - options.size) / 2), options.text, false);
+
+    return textImg;
 };
