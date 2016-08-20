@@ -16,7 +16,7 @@ https://www.npmjs.com/package/node-gd
 ##生成带logo的二维码
 ```javascript
 var fs = require('fs'),
-    qrCodeLogo = require('../index'),
+    qrCodeLogo = require('qrcode-logo'),
 
     url = 'https://www.baidu.com/',
     qrcodeImgFilePath = '/Users/test/myworkspace/qr_logo.png',
@@ -34,7 +34,7 @@ qrCodeLogo(url, qrcodeImgFilePath, {
 ##仅生成二维码图片
 ```javascript
 var fs = require('fs'),
-    qrCodeLogo = require('../index'),
+    qrCodeLogo = require('qrcode-logo'),
 
     url = 'https://www.baidu.com/',
     qrcodeImgFilePath = '/Users/test/myworkspace/qr.png';
@@ -47,7 +47,7 @@ qrCodeLogo(url, qrcodeImgFilePath, function (err, img) {
 ##生成带logo（带圆角边框）且带底部文本的二维码图片
 ```javascript
 var fs = require('fs'),
-    qrCodeLogo = require('../index'),
+    qrCodeLogo = require('qrcode-logo'),
 
     url = 'https://www.baidu.com/',
     qrcodeImgFilePath = '/Users/test/myworkspace/qr_logo.png',
