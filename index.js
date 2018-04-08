@@ -137,13 +137,13 @@ var addLogoImage = function(img, logoImg) {
     logoImgWidth = logoImg.width;
     logoImgHeight = logoImg.height;
     
-    logoQrWidth = parseInt(imgWidth / 3);
+    logoQrWidth = parseInt(imgWidth / 5);
     scale = logoImgWidth / logoQrWidth;
     logoQrHeight = parseInt(logoImgHeight / scale);
     
-    // 取目标图像的1/3大小作为logo填充大小在图像的1/3处填充，保证logo处于图像中间
+    // 取目标图像的2/5大小作为logo填充大小在图像的2/5处填充，保证logo处于图像中间
     logoImg.copyResampled(img,
-        parseInt(imgWidth / 3), parseInt(imgHeight / 3),
+        parseInt(imgWidth * 2 / 5), parseInt(imgHeight * 2 / 5),
         0, 0,
         logoQrWidth, logoQrHeight,
         logoImgWidth, logoImgHeight);
