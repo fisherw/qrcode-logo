@@ -10,6 +10,7 @@
 <img src="https://raw.githubusercontent.com/fisherw/resource-cache/master/img/testqr_logo1.png" width = "150" height = "165" alt="带logo二维码1" align=left />
 
 </div>
+<br>
 
 
 
